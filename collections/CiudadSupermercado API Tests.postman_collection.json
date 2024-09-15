@@ -1,0 +1,1224 @@
+{
+	"info": {
+		"_postman_id": "7aab80a3-30dc-4b79-b4d1-9e3a709b5641",
+		"name": "CiudadSupermercado API Tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28292780"
+	},
+	"item": [
+		{
+			"name": "Ciudad CRUD Operations",
+			"item": [
+				{
+					"name": "POST - Create a valid Ciudad",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Extracting data from the response",
+									"var responseData = pm.response.json();",
+									"",
+									"// Set the pm globals to the id of the created product",
+									"pm.globals.set(\"ciudadId\", responseData.id);",
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"nombre\": \"Buenos Aires\", \"pais\": \"Argentina\", \"habitantes\": 15000000}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/ciudades",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"ciudades"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST - Create an invalid Ciudad",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 412\", function () {",
+									"    pm.response.to.have.status(412);",
+									"});",
+									"",
+									"pm.test(\"Get expected error message\", function () {",
+									"   var data = pm.response.json();",
+									"   pm.expect(data.message).to.eql(\"The country InvalidCountry is not allowed. Only Argentina, Ecuador, and Paraguay are valid.\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"nombre\": \"Invalid City\", \"pais\": \"InvalidCountry\", \"habitantes\": 1000}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/ciudades",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"ciudades"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET - Get all Ciudades",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Number of ciudades > ' + 0, function () {",
+									"   var data = pm.response.json()",
+									"   pm.expect(data.length).to.greaterThan(0)",
+									"});",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/ciudades",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"ciudades"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET - Get Ciudad by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/ciudades/{{ciudadId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"ciudades",
+								"{{ciudadId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET - Get Ciudad by invalid ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"   pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Get expected error message\", function () {",
+									"   var data = pm.response.json();",
+									"   pm.expect(data.message).to.eql(\"The city with the given id was not found\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/ciudades/00000000-0000-4000-8000-000000000000",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"ciudades",
+								"00000000-0000-4000-8000-000000000000"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT - Update Ciudad",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"nombre\": \"Updated City\", \"pais\": \"Argentina\", \"habitantes\": 2000000}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/ciudades/{{ciudadId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"ciudades",
+								"{{ciudadId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT - Update Ciudad invalid ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"   pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Get expected error message\", function () {",
+									"   var data = pm.response.json();",
+									"   pm.expect(data.message).to.eql(\"The city with the given id was not found\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"nombre\": \"Updated City\", \"pais\": \"Argentina\", \"habitantes\": 2000000}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/ciudades/00000000-0000-4000-8000-000000000000",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"ciudades",
+								"00000000-0000-4000-8000-000000000000"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE - Delete Ciudad",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/ciudades/{{ciudadId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"ciudades",
+								"{{ciudadId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE - Delete Ciudad invalid ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"   pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Get expected error message\", function () {",
+									"   var data = pm.response.json();",
+									"   pm.expect(data.message).to.eql(\"The city with the given id was not found\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/ciudades/{{ciudadId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"ciudades",
+								"{{ciudadId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Supermercado CRUD Operations",
+			"item": [
+				{
+					"name": "POST - Create a valid Supermercado",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Extracting data from the response",
+									"var responseData = pm.response.json();",
+									"",
+									"// Set the pm globals to the id of the created product",
+									"pm.globals.set(\"supermercadoId\", responseData.id);",
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"nombre\": \"Supermercado A\", \"paginaWeb\": \"https://example.com\", \"latitud\": 38, \"longitud\": 40}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/supermercados",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"supermercados"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST - Create an invalid Supermercado",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"nombre\": \"\", \"paginaWeb\": \"\", \"latitud\": null, \"longitud\": null}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/supermercados",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"supermercados"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET - Get all Supermercados",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Number of supermercados > ' + 0, function () {",
+									"   var data = pm.response.json()",
+									"   pm.expect(data.length).to.greaterThan(0)",
+									"});",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/supermercados",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"supermercados"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET - Get Supermercado by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/supermercados/{{supermercadoId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"supermercados",
+								"{{supermercadoId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET - Get Supermercado by invalid ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"   pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Get expected error message\", function () {",
+									"   var data = pm.response.json();",
+									"   pm.expect(data.message).to.eql(\"The supermarket with the given id was not found\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/supermercados/00000000-0000-4000-8000-000000000000",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"supermercados",
+								"00000000-0000-4000-8000-000000000000"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT - Update Supermercado",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"nombre\": \"Updated Supermercado\", \"paginaWeb\": \"https://updated.com\", \"latitud\": 30, \"longitud\": 40}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/supermercados/{{supermercadoId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"supermercados",
+								"{{supermercadoId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT - Update Supermercado invalid ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"   pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Get expected error message\", function () {",
+									"   var data = pm.response.json();",
+									"   pm.expect(data.message).to.eql(\"The supermarket with the given id was not found\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"nombre\": \"Updated Supermercado\", \"paginaWeb\": \"https://updated.com\", \"latitud\": 30, \"longitud\": 40}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/supermercados/00000000-0000-4000-8000-000000000000",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"supermercados",
+								"00000000-0000-4000-8000-000000000000"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE - Delete Supermercado",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/supermercados/{{supermercadoId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"supermercados",
+								"{{supermercadoId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE - Delete Supermercado invalid ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"   pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Get expected error message\", function () {",
+									"   var data = pm.response.json();",
+									"   pm.expect(data.message).to.eql(\"The supermarket with the given id was not found\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/supermercados/{{supermercadoId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"supermercados",
+								"{{supermercadoId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Ciudad & Supermercado Association",
+			"item": [
+				{
+					"name": "POST - Create a valid Ciudad",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Extracting data from the response",
+									"var responseData = pm.response.json();",
+									"",
+									"// Set the pm globals to the id of the created product",
+									"pm.globals.set(\"ciudadId\", responseData.id);",
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"nombre\": \"Buenos Aires\", \"pais\": \"Argentina\", \"habitantes\": 15000000}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/ciudades",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"ciudades"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST - Create a valid Supermercado",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Extracting data from the response",
+									"var responseData = pm.response.json();",
+									"",
+									"// Set the pm globals to the id of the created product",
+									"pm.globals.set(\"supermercadoId\", responseData.id);",
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"nombre\": \"Supermercado A\", \"paginaWeb\": \"https://example.com\", \"latitud\": 38, \"longitud\": 40}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/supermercados",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"supermercados"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST - Create a valid Supermercado 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Extracting data from the response",
+									"var responseData = pm.response.json();",
+									"",
+									"// Set the pm globals to the id of the created product",
+									"pm.globals.set(\"supermercadoId2\", responseData.id);",
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"nombre\": \"Supermercado B\", \"paginaWeb\": \"https://example.com\", \"latitud\": 38, \"longitud\": 40}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/supermercados",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"supermercados"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST - Associate Supermercado to Ciudad (Valid)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/ciudades/{{ciudadId}}/supermercados/{{supermercadoId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"ciudades",
+								"{{ciudadId}}",
+								"supermercados",
+								"{{supermercadoId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST - Associate invalid Supermercado to Ciudad",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"pm.test(\"Error message received\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.eql('The supermarket with the given id was not found');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/ciudades/{{ciudadId}}/supermercados/00000000-0000-4000-8000-000000000000",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"ciudades",
+								"{{ciudadId}}",
+								"supermercados",
+								"00000000-0000-4000-8000-000000000000"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET - Find All Supermercados in Ciudad",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Number of supermercados > 0\", function () {",
+									"    var data = pm.response.json();",
+									"    pm.expect(data.length).to.be.above(0);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/ciudades/{{ciudadId}}/supermercados",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"ciudades",
+								"{{ciudadId}}",
+								"supermercados"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET - Find Supermercado in Ciudad by ID (Valid)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/ciudades/{{ciudadId}}/supermercados/{{supermercadoId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"ciudades",
+								"{{ciudadId}}",
+								"supermercados",
+								"{{supermercadoId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET - Find non-associated Supermercado in Ciudad by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 412\", function () {",
+									"    pm.response.to.have.status(412);",
+									"});",
+									"",
+									"pm.test(\"Get expected error message\", function () {",
+									"   var data = pm.response.json();",
+									"   pm.expect(data.message).to.eql(\"The supermarket with the given id is not associated to the city\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/ciudades/{{ciudadId}}/supermercados/{{supermercadoId2}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"ciudades",
+								"{{ciudadId}}",
+								"supermercados",
+								"{{supermercadoId2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT - Update Supermercados in Ciudad",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\"id\":\"{{supermercadoId2}}\"}\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/ciudades/{{ciudadId}}/supermercados",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"ciudades",
+								"{{ciudadId}}",
+								"supermercados"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT - Update invalid Supermercados in Ciudad",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"   pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Get expected error message\", function () {",
+									"   var data = pm.response.json();",
+									"   pm.expect(data.message).to.eql(\"The supermarket with the given id was not found\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\"id\": \"00000000-0000-0000-0000-000000000000\"}\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/ciudades/{{ciudadId}}/supermercados",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"ciudades",
+								"{{ciudadId}}",
+								"supermercados"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE - Remove Supermercado from Ciudad",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/ciudades/{{ciudadId}}/supermercados/{{supermercadoId2}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"ciudades",
+								"{{ciudadId}}",
+								"supermercados",
+								"{{supermercadoId2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE - Remove non-associated Supermercado from Ciudad",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 412\", function () {",
+									"    pm.response.to.have.status(412);",
+									"});",
+									"",
+									"pm.test(\"Get expected error message\", function () {",
+									"   var data = pm.response.json();",
+									"   pm.expect(data.message).to.eql(\"The supermarket with the given id is not associated to the city\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/ciudades/{{ciudadId}}/supermercados/{{supermercadoId1}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"ciudades",
+								"{{ciudadId}}",
+								"supermercados",
+								"{{supermercadoId1}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000/api/v1"
+		}
+	]
+}
